@@ -18,9 +18,9 @@ Before running the bot, the following are required:
 
 Additionally, create a `.env` file in the base directory with the following information (without square brackets):
 ```
-DISCORD_TOKEN= [your Discord bot token]
-COMMAND_PREFIX= [prefix string for text commands]
-REMINDER_DELAY= [seconds between reminders]
+DISCORD_TOKEN=[your Discord bot token]
+COMMAND_PREFIX=[prefix string for text commands]
+REMINDER_DELAY=[seconds between reminders]
 ```
 
 To run the bot, simply execute the following command in your shell.

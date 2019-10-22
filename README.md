@@ -1,7 +1,7 @@
 # discord-hydration-bot (WIP)
 
 ## Description
-This is the code behind HydrationBot, a Discord bot that reminds gamers to stay hydrated. If HydrationBot is active on your Discord server, it will join voice active channels on a fixed interval and play an audio clip with a friendly reminder to stay hydrated. Currently, functionality is very basic. See to-do list below for future plans.
+This is the code behind HydrationBot, a Discord bot that reminds gamers to stay hydrated. If HydrationBot is active on your Discord server, it will join active voice channels on a fixed interval and play an audio clip with a friendly reminder to stay hydrated. Currently, functionality is very basic. See to-do list below for future plans.
 
 ## Adding HydrationBot to your server
 HydrationBot is currently a work in progress and is not designed for deployment on multiple Discord servers. Check back for progress

@@ -47,12 +47,14 @@ reminders = []
 # Discord Bot Code below
 bot = commands.Bot(command_prefix=PREFIX)
 
+# Joins voice channel, plays specified audio clip, then leaves
 async def say_something(channel: discord.VoiceChannel, fname: str):
     voice_client = await channel.connect()
     voice_client.play(discord.FFmpegPCMAudio(fname, options='-loglevel panic'))
     await asyncio.sleep(2)
     await voice_client.disconnect()
 
+# Task which iterates through list of channels to remind, calls say_something for each
 async def reminder_task():
     while True:
         if len(reminders)>0:
@@ -67,13 +69,16 @@ async def reminder_task():
         await asyncio.sleep(DELAY)
 
 
+# Called when bot is initialized and connects to discord
 @bot.event
 async def on_ready():
     await bot.change_presence(activity=discord.Game(name='Water Drinking Simulator 1998'))
     log.info('Initialization complete. %s has connected to Discord!', bot.user.name)
     bot.loop.create_task(reminder_task())
 
-
+# Called anytime someone changes voice state
+# This occurs on channel join or leave, mute/deafen status change, etc.
+# Adds channels to reminder list when people join, removes them when channels become unpopulated
 @bot.event
 async def on_voice_state_update(member, before, after):
     if member.name != 'HydrationBot':
@@ -86,6 +91,7 @@ async def on_voice_state_update(member, before, after):
                 log.debug('Initializing reminders on channel %s', after.channel.name)
                 reminders.append(after.channel)
 
+# Called when user uses prefix with incorrect command
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
@@ -94,10 +100,7 @@ async def on_command_error(ctx, error):
         raise error
 
 
-@bot.command(name='test', help='Generates a simple test response')
-async def test_cmd(ctx):
-    await ctx.send('Ross sucks')
-
+# remindnow command. Runs hydration reminder in user's current voice channel
 @bot.command(name='remindnow', help='Reminds everyone in your current voice channel to drink water')
 async def remind_now(ctx):
     author = ctx.author
@@ -110,4 +113,5 @@ async def remind_now(ctx):
         await ctx.send('You must be in a voice channel')
 
 
+# INITIALIZE
 bot.run(TOKEN)

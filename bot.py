@@ -35,6 +35,9 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = os.getenv('COMMAND_PREFIX')
 DELAY = int(os.getenv('REMINDER_DELAY'))
 
+# Hydration Audio File
+HYDRATION_AUDIO = r'assets/voice/drink_water.mp3'
+
 log.debug('Notifying on %ss intervals', DELAY)
 
 # List that holds channels to remind
@@ -44,15 +47,18 @@ reminders = []
 # Discord Bot Code below
 bot = commands.Bot(command_prefix=PREFIX)
 
+async def say_something(channel: discord.VoiceChannel, fname: str):
+    voice_client = await channel.connect()
+    voice_client.play(discord.FFmpegPCMAudio(fname, options='-loglevel panic'))
+    await asyncio.sleep(2)
+    await voice_client.disconnect()
+
 async def reminder_task():
     while True:
         if len(reminders)>0:
             log.info('Reminding %i voice channels to stay hydrated...', len(reminders))
             for channel in reminders:
-                voice_client = await channel.connect()
-                voice_client.play(discord.FFmpegPCMAudio('assets/voice/drink_water.mp3', options='-loglevel panic'))
-                await asyncio.sleep(2)
-                await voice_client.disconnect()
+                await say_something(channel, HYDRATION_AUDIO)
 
             log.info('Reminders complete. Next round in %i seconds', DELAY)
         else:
@@ -63,25 +69,45 @@ async def reminder_task():
 
 @bot.event
 async def on_ready():
+    await bot.change_presence(activity=discord.Game(name='Water Drinking Simulator 1998'))
     log.info('Initialization complete. %s has connected to Discord!', bot.user.name)
     bot.loop.create_task(reminder_task())
 
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    if before.channel != after.channel:
-        if before.channel != None and len(before.channel.members) == 0 and before.channel in reminders:
-            log.debug('Ending reminders on channel %s', before.channel.name)
-            reminders.remove(before.channel)
+    if member.name != 'HydrationBot':
+        if before.channel != after.channel:
+            if before.channel != None and len(before.channel.members) == 0 and before.channel in reminders:
+                log.debug('Ending reminders on channel %s', before.channel.name)
+                reminders.remove(before.channel)
 
-        if after.channel != None and after.channel not in reminders:
-            log.debug('Initializing reminders on channel %s', after.channel.name)
-            reminders.append(after.channel)
+            if after.channel != None and after.channel not in reminders:
+                log.debug('Initializing reminders on channel %s', after.channel.name)
+                reminders.append(after.channel)
+
+@bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        log.warn('%s. Caused by user %s in server %s', error, ctx.author.name, ctx.guild.name)
+    else:
+        raise error
 
 
 @bot.command(name='test', help='Generates a simple test response')
 async def test_cmd(ctx):
     await ctx.send('Ross sucks')
+
+@bot.command(name='remindnow', help='Reminds everyone in your current voice channel to drink water')
+async def remind_now(ctx):
+    author = ctx.author
+    if author.voice:
+        vc = author.voice.channel
+        log.info('Manual reminder for user %s in channel %s in server %s', author.name, vc.name, ctx.guild.name)
+        await say_something(vc, HYDRATION_AUDIO)
+        log.debug('Manual reminder complete')
+    else:
+        await ctx.send('You must be in a voice channel')
 
 
 bot.run(TOKEN)

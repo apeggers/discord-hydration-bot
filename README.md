@@ -33,7 +33,7 @@ $ pipenv run python bot.py
 - [x] Add improved logging framework (log to file and console)
 - [ ] Add command for listing channels with active reminders and time to next reminder
 - [ ] Change notifications to channel-specific timers
-- [ ] Add command to remind user's current channel now
+- [x] Add command to remind user's current channel now
 - [ ] Add command to prevent reminders on specific channel for set time
 - [ ] Add framework for server-specific settings and commands to change them
 - [ ] Add blacklisting for specific channels

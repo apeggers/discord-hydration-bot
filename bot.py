@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 import discord
 from discord.ext import commands
 
-from utils import ReminderSet
+import utils
 
 # Logging Configuration
 log = logging.getLogger(__name__)
@@ -46,7 +46,7 @@ POSTURE_CHECK_AUDIO = r'assets/voice/posture_check.mp3'
 log.debug('Notifying on %ss intervals', DELAY)
 
 # List that holds channels to remind
-reminders = ReminderSet()
+reminders = utils.ReminderSet()
 
 
 # Discord Bot Code below
@@ -68,7 +68,7 @@ async def say_something(channel: discord.VoiceChannel, fname: str, dur: float):
 
 
 async def reminder_task():
-    '''Runs hydration reminder for each channel in reminders list.
+    '''Queues asynchronous reminders for each ServerSet in reminders.
 
     Must be added to bot loop with bot.loop.create_task(reminder_task())
     '''
@@ -76,15 +76,21 @@ async def reminder_task():
         if len(reminders)>0:
             log.info('Reminding %i voice channels to stay hydrated...', len(reminders))
             for server in reminders:
-                await asyncio.sleep(0)
-                for channel in server:
-                    await say_something(channel, HYDRATION_AUDIO, 2)
-
-            log.info('Reminders complete. Next round in %i seconds', DELAY)
+                bot.loop.create_task(remind_server(server))
+            log.info('Reminders initialized. Next round in %i seconds', DELAY)
         else:
             log.info('No active voice channels. Checking again in %i seconds', DELAY)
         
         await asyncio.sleep(DELAY)
+
+async def remind_server(server: utils.ServerSet):
+    '''Synchronously calls hydration reminder for each channel in a ServerSet
+    
+    Arguments:
+        server {utils.ServerSet} -- the ServerSet object with channels to remind
+    '''
+    for channel in server:
+        await say_something(channel, HYDRATION_AUDIO, 2)
 
 
 @bot.event

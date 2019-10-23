@@ -32,7 +32,7 @@ $ pipenv run python bot.py
 
 - [x] Add improved logging framework (log to file and console)
 - [x] Store channel list in data structure iterable by server
-- [ ] Iterate servers asynchronously when running reminders, iterate channels in each server synchronously
+- [x] Iterate servers asynchronously when running reminders, iterate channels in each server synchronously
 - [ ] Add command for listing channels with active reminders and time to next reminder
 - [ ] Change notifications to channel-specific timers
 - [x] Add command to remind user's current channel now

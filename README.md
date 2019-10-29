@@ -22,8 +22,9 @@ DISCORD_TOKEN=[your Discord bot token]
 COMMAND_PREFIX=[prefix string for text commands]
 REMINDER_DELAY=[seconds between reminders]
 ```
+To configure the Python virtual environment, run `$ pipenv install` from the project base directory:
 
-To run the bot, simply execute the following command in your shell.
+To run the bot, simply execute the following command from the base directory:
 ```
 $ pipenv run python bot.py
 ```

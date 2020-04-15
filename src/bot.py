@@ -29,6 +29,8 @@ ch.setLevel(logging.DEBUG)
 ch.setFormatter(formatter)
 
 # Logfile handler
+if not os.path.exists(LOGS_DIR):
+    os.mkdir(LOGS_DIR)
 fh = logging.FileHandler(os.path.join(LOGS_DIR, 'bot.log'))
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)

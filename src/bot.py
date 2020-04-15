@@ -12,6 +12,12 @@ from discord.ext import commands
 
 import utils
 
+# Establish Project Directories
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ASSETS_DIR = os.path.join(BASE_DIR, 'assets')
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+ENV_PATH = os.path.join(BASE_DIR, '.env')
+
 # Logging Configuration
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
@@ -23,7 +29,7 @@ ch.setLevel(logging.DEBUG)
 ch.setFormatter(formatter)
 
 # Logfile handler
-fh = logging.FileHandler(r'logs/bot.log')
+fh = logging.FileHandler(os.path.join(LOGS_DIR, 'bot.log'))
 fh.setLevel(logging.INFO)
 fh.setFormatter(formatter)
 
@@ -33,15 +39,15 @@ log.addHandler(fh)
 log.info('Initializing...')
 
 # Load Environment Variables
-load_dotenv()
+load_dotenv(dotenv_path=ENV_PATH)
 TOKEN = os.getenv('DISCORD_TOKEN')
 PREFIX = os.getenv('COMMAND_PREFIX')
 DELAY = int(os.getenv('REMINDER_DELAY'))
 
 # Audio Files
-HYDRATION_AUDIO = r'assets/voice/drink_water.mp3'
-VIBE_CHECK_AUDIO = r'assets/voice/vibe_check.mp3'
-POSTURE_CHECK_AUDIO = r'assets/voice/posture_check.mp3'
+HYDRATION_AUDIO = os.path.join(ASSETS_DIR, 'voice', 'drink_water.mp3')
+VIBE_CHECK_AUDIO = os.path.join(ASSETS_DIR, 'voice', 'vibe_check.mp3')
+POSTURE_CHECK_AUDIO = os.path.join(ASSETS_DIR, 'voice', 'posture_check.mp3')
 
 log.debug('Notifying on %ss intervals', DELAY)
 
@@ -195,3 +201,4 @@ async def posture_check(ctx):
 
 # INITIALIZE
 bot.run(TOKEN)
+

@@ -24,9 +24,9 @@ REMINDER_DELAY=[seconds between reminders]
 ```
 To configure the Python virtual environment, run `$ pipenv install` from the project base directory.
 
-To run the bot, simply execute the following command from the base directory:
+To run the bot, simply run `src/bot.py` using `pipenv run`:
 ```
-$ pipenv run python bot.py
+$ pipenv run python src/bot.py
 ```
 
 ## To-do
@@ -34,6 +34,7 @@ $ pipenv run python bot.py
 - [x] Add improved logging framework (log to file and console)
 - [x] Store channel list in data structure iterable by server
 - [x] Iterate servers asynchronously when running reminders, iterate channels in each server synchronously
+- [x] Improve repository file structure
 - [ ] Add command for listing channels with active reminders and time to next reminder
 - [ ] Change notifications to channel-specific timers
 - [x] Add command to remind user's current channel now

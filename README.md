@@ -42,7 +42,7 @@ $ pipenv run python src/bot.py
 - [ ] Add framework for server-specific settings and commands to change them
 - [ ] Add blacklisting for specific channels
 - [ ] Add blacklisting for specific users (e.g. don't notify bots in channels alone)
-- [ ] Move data and settings to relational database
+- [ ] Move data and settings to a database
 - [ ] Additional checks? (e.g. posture check, vibe check, etc.)
 - [ ] Make bot public???
 - [ ] Profit????????
